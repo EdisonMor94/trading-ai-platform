@@ -176,6 +176,8 @@ export default function EconomicCalendarPage() {
   useEffect(() => {
     if (userLoading) return;
 
+    setLoading(true);
+
     const fetchInitialData = async () => {
       try {
         if (profile?.calendar_preferences) {

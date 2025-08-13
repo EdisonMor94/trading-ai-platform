@@ -10,9 +10,9 @@ interface Profile {
   id: string;
   full_name: string;
   subscription_plan: PlanName;
-  watchlist: string[]; // Añadido para que el perfil esté completo
-  calendar_preferences: any; // Añadido para que el perfil esté completo
-  // Añade aquí cualquier otro campo del perfil que necesites en el futuro
+  watchlist: string[];
+  calendar_preferences: any;
+  // Añade aquí cualquier otro campo del perfil
 }
 
 // Definimos el tipo para el valor del contexto
@@ -21,7 +21,7 @@ type UserContextType = {
   profile: Profile | null;
   permissions: ReturnType<typeof getPermissionsForPlan>;
   loading: boolean;
-  refreshProfile: () => Promise<void>; // <-- AÑADIMOS LA NUEVA FUNCIÓN
+  refreshProfile: () => Promise<void>;
 };
 
 // Creamos el contexto
@@ -36,10 +36,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // El estado inicial siempre es 'cargando'
 
-  // --- INICIO DE LA MODIFICACIÓN ---
-  // Envolvemos la lógica de fetch en un useCallback para poder reutilizarla
+  // --- LÓGICA DE OBTENCIÓN DE PERFIL (SIN CAMBIOS) ---
   const fetchProfile = useCallback(async (currentUser: User) => {
     const { data: profileData, error } = await supabase
       .from('profiles')
@@ -54,51 +53,63 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setProfile(profileData);
     }
   }, [supabase]);
-  // --- FIN DE LA MODIFICACIÓN ---
 
-
+  // --- USEEFFECT PRINCIPAL (LÓGICA CORREGIDA) ---
   useEffect(() => {
-    const getInitialUserAndProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-
-      if (user) {
-        await fetchProfile(user);
-      }
-      setLoading(false);
-    };
-
-    getInitialUserAndProfile();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    // Esta función se ejecutará solo una vez al montar el componente
+    const initializeSession = async () => {
+      // 1. Obtenemos la sesión inicial. Esto restaura la sesión si el usuario ya estaba logueado.
+      const { data: { session } } = await supabase.auth.getSession();
       const currentUser = session?.user;
       setUser(currentUser ?? null);
-      
+
+      // 2. Si hay un usuario, buscamos su perfil.
       if (currentUser) {
         await fetchProfile(currentUser);
-      } else {
-        setProfile(null);
       }
-    });
 
-    return () => {
-      subscription.unsubscribe();
+      // 3. Marcamos la carga inicial como completada, SOLO DESPUÉS de terminar la primera comprobación.
+      setLoading(false);
+
+      // 4. Creamos el listener para futuros cambios (login/logout)
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        const newCurrentUser = session?.user;
+        setUser(newCurrentUser ?? null);
+
+        if (newCurrentUser) {
+          // Si hay un nuevo usuario (ej. después de un login), buscamos su perfil
+          await fetchProfile(newCurrentUser);
+        } else {
+          // Si el usuario cierra sesión, limpiamos el perfil
+          setProfile(null);
+        }
+      });
+
+      // 5. Devolvemos la función de limpieza para el listener
+      return () => {
+        subscription.unsubscribe();
+      };
     };
-  }, [supabase, fetchProfile]);
 
-  // --- INICIO DE LA MODIFICACIÓN ---
-  // Creamos la función de refresco que el dashboard podrá llamar
+    const subscriptionPromise = initializeSession();
+
+    // Función de limpieza del useEffect
+    return () => {
+      // Nos aseguramos de desuscribirnos si el componente se desmonta
+      subscriptionPromise.then(cleanup => cleanup && cleanup());
+    };
+  }, [supabase, fetchProfile]); // Las dependencias son estables y no causarán re-ejecuciones
+
+  // --- FUNCIÓN DE REFRESCO (SIN CAMBIOS) ---
   const refreshProfile = async () => {
     if (user) {
       console.log("Refrescando datos del perfil...");
       await fetchProfile(user);
     }
   };
-  // --- FIN DE LA MODIFICACIÓN ---
 
   const permissions = getPermissionsForPlan(profile?.subscription_plan);
-
-  const value = { user, profile, permissions, loading, refreshProfile }; // <-- AÑADIMOS LA FUNCIÓN AL VALOR
+  const value = { user, profile, permissions, loading, refreshProfile };
 
   return (
     <UserContext.Provider value={value}>

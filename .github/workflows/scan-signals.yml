@@ -1,48 +1,42 @@
-# Nombre del flujo de trabajo que verás en la pestaña "Actions" de GitHub
 name: Tareas Programadas de la Plataforma
 
-# Define cuándo se ejecutará este flujo de trabajo
 on:
   schedule:
-    # Se ejecuta cada 5 minutos
+    # El flujo de trabajo se ejecutará CADA 5 MINUTOS.
     - cron: "*/5 * * * *"
-    # Se ejecuta cada hora, en el minuto 0
-    - cron: "0 * * * *"
-  # También permite la ejecución manual desde la pestaña Actions de GitHub
+  # También permite la ejecución manual
   workflow_dispatch:
 
-# Define los trabajos que se ejecutarán
 jobs:
   scheduled_tasks:
-    # Se ejecuta en una máquina virtual de Ubuntu
     runs-on: ubuntu-latest
 
     steps:
-      # --- Tareas que se ejecutan cada 5 minutos ---
-      - name: Actualizar valores 'actual' del calendario (cada 5 min)
-        # Solo se ejecuta si el horario es el de cada 5 minutos
-        if: github.event.schedule == '*/5 * * * *'
+      # --- Tarea 1: Se ejecuta siempre (cada 5 minutos) ---
+      - name: Actualizar valores 'actual' del calendario
         run: |
           echo "Llamando a la Edge Function update-actual-values..."
           curl -X POST "${{ secrets.UPDATE_ACTUALS_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
 
-      # --- Tareas que se ejecutan cada hora ---
-      - name: Escanear Señales de Trading (cada hora)
-        # Solo se ejecuta si el horario es el de cada hora
-        if: github.event.schedule == '0 * * * *'
+      # --- Tarea 2: Se ejecuta solo al inicio de la hora ---
+      # Este paso comprueba si el minuto actual está entre 00 y 04.
+      # Esto nos da un margen de 5 minutos por si GitHub Actions se retrasa.
+      - name: Escanear Señales de Trading (Solo si es :00)
+        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5
         run: |
-          echo "Llamando a la Edge Function signal-scanner..."
+          echo "Ejecutando tarea horaria: signal-scanner..."
           curl -X POST "${{ secrets.SIGNAL_SCANNER_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
 
-      - name: Actualizar Calendario Económico Completo (cada hora)
-        # Solo se ejecuta si el horario es el de cada hora
-        if: github.event.schedule == '0 * * * *'
+      # --- Tarea 3: Se ejecuta solo al inicio de la hora ---
+      - name: Actualizar Calendario Económico Completo (Solo si es :00)
+        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5
         run: |
-          echo "Llamando a la Edge Function update-calendar..."
+          echo "Ejecutando tarea horaria: update-calendar..."
           curl -X POST "${{ secrets.UPDATE_CALENDAR_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
+
