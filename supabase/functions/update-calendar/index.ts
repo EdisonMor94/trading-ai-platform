@@ -28,27 +28,26 @@ async function translateTexts(texts: string[], apiKey: string): Promise<string[]
 
 Deno.serve(async (_req) => {
   try {
-    // Usamos el Service Role Key para tener permisos de escritura en la base de datos
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // 1. Obtener claves de API
+    // 1. Obtener claves de API (sin cambios)
     const FMP_API_KEY = Deno.env.get("FMP_API_KEY");
     const GOOGLE_TRANSLATE_API_KEY = Deno.env.get("GOOGLE_TRANSLATE_API_KEY");
     if (!FMP_API_KEY || !GOOGLE_TRANSLATE_API_KEY) {
       throw new Error("Una o más claves de API no están configuradas.");
     }
 
-    // 2. Preparar fechas (obtenemos un rango más amplio, ej. 14 días)
+    // 2. Preparar fechas (sin cambios)
     const today = new Date();
     const futureDate = new Date(today);
     futureDate.setDate(today.getDate() + 14);
     const fromDate = today.toISOString().split('T')[0];
     const toDate = futureDate.toISOString().split('T')[0];
 
-    // 3. Llamar a la API de FMP
+    // 3. Llamar a la API de FMP (sin cambios)
     const calendarUrl = `https://financialmodelingprep.com/api/v3/economic_calendar?from=${fromDate}&to=${toDate}&apikey=${FMP_API_KEY}`;
     console.log(`[update-calendar] Obteniendo eventos de FMP desde ${fromDate} hasta ${toDate}`);
     const response = await fetch(calendarUrl);
@@ -56,13 +55,26 @@ Deno.serve(async (_req) => {
     const rawData = await response.json();
     if (!Array.isArray(rawData)) throw new Error("La respuesta de FMP no es un formato válido.");
 
-    // 4. Traducir los eventos
-    const eventNamesToTranslate = rawData.map(event => event.event);
+    // --- INICIO DE LA MODIFICACIÓN ---
+    // 4. Filtrar duplicados ANTES de procesar
+    const uniqueEvents = new Map();
+    rawData.forEach(event => {
+      const event_id = `${event.date}-${event.event}`;
+      if (!uniqueEvents.has(event_id)) {
+        uniqueEvents.set(event_id, event);
+      }
+    });
+    const filteredRawData = Array.from(uniqueEvents.values());
+    console.log(`[update-calendar] Se encontraron ${rawData.length} eventos, ${filteredRawData.length} son únicos.`);
+    // --- FIN DE LA MODIFICACIÓN ---
+
+    // 5. Traducir los eventos (ahora solo los únicos)
+    const eventNamesToTranslate = filteredRawData.map(event => event.event);
     const translatedEventNames = await translateTexts(eventNamesToTranslate, GOOGLE_TRANSLATE_API_KEY);
 
-    // 5. Preparar los datos para la base de datos
-    const eventsToUpsert = rawData.map((event, index) => {
-      const event_id = `${event.date}-${event.event}`; // Creamos el ID único
+    // 6. Preparar los datos para la base de datos
+    const eventsToUpsert = filteredRawData.map((event, index) => {
+      const event_id = `${event.date}-${event.event}`;
       const previousValue = event.previous ?? event.prev;
 
       return {
@@ -87,18 +99,17 @@ Deno.serve(async (_req) => {
       });
     }
 
-    // 6. Guardar los datos en la tabla 'economic_events'
-    // 'upsert' actualizará los eventos existentes y creará los nuevos.
+    // 7. Guardar los datos en la tabla 'economic_events' (sin cambios)
     console.log(`[update-calendar] Guardando/Actualizando ${eventsToUpsert.length} eventos en la base de datos.`);
     const { error } = await supabaseClient
       .from('economic_events')
-      .upsert(eventsToUpsert, { onConflict: 'event_id' }); // Le decimos que el conflicto se resuelve con 'event_id'
+      .upsert(eventsToUpsert, { onConflict: 'event_id' }); 
 
     if (error) {
-      throw error; // Si hay un error con la base de datos, lo lanzamos
+      throw error;
     }
 
-    // 7. Devolver una respuesta de éxito
+    // 8. Devolver una respuesta de éxito (sin cambios)
     return new Response(JSON.stringify({ message: `${eventsToUpsert.length} eventos actualizados correctamente.` }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
