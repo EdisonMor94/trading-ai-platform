@@ -1,0 +1,78 @@
+[functions.create-dlocalgo-payment]
+enabled = true
+verify_jwt = true
+import_map = "./functions/create-dlocalgo-payment/deno.json"
+entrypoint = "./functions/create-dlocalgo-payment/index.ts"
+
+[functions.dlocal-webhook]
+enabled = true
+verify_jwt = true
+import_map = "./functions/dlocal-webhook/deno.json"
+entrypoint = "./functions/dlocal-webhook/index.ts"
+
+[functions.generate-summary]
+enabled = true
+verify_jwt = true
+import_map = "./functions/generate-summary/deno.json"
+entrypoint = "./functions/generate-summary/index.ts"
+
+[functions.paypal-webhook]
+enabled = true
+verify_jwt = true
+import_map = "./functions/paypal-webhook/deno.json"
+entrypoint = "./functions/paypal-webhook/index.ts"
+
+[functions.get-economic-calendar]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get-economic-calendar/deno.json"
+entrypoint = "./functions/get-economic-calendar/index.ts"
+
+[functions.get-market-pulse]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get-market-pulse/deno.json"
+entrypoint = "./functions/get-market-pulse/index.ts"
+
+[functions.get-news-analysis]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get-news-analysis/deno.json"
+entrypoint = "./functions/get-news-analysis/index.ts"
+
+[functions.get-event-analysis]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get-event-analysis/deno.json"
+entrypoint = "./functions/get-event-analysis/index.ts"
+
+[functions.get-daily-briefing]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get-daily-briefing/deno.json"
+entrypoint = "./functions/get-daily-briefing/index.ts"
+
+[functions.get-dashboard-widgets]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get-dashboard-widgets/deno.json"
+entrypoint = "./functions/get-dashboard-widgets/index.ts"
+
+[functions.signal-scanner]
+enabled = true
+verify_jwt = true
+import_map = "./functions/signal-scanner/deno.json"
+entrypoint = "./functions/signal-scanner/index.ts"
+
+[functions.update-calendar]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-calendar/deno.json"
+entrypoint = "./functions/update-calendar/index.ts"
+
+[functions.update-actual-values]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-actual-values/deno.json"
+entrypoint = "./functions/update-actual-values/index.ts"
+

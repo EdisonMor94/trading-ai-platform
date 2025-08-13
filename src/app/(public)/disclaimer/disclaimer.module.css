@@ -1,0 +1,81 @@
+/* src/app/disclaimer/disclaimer.module.css */
+
+.container {
+  /* CORRECCIÓN: Añadimos el fondo claro */
+  background-color: #f8f9fa;
+  width: 100%;
+  padding-top: 120px; 
+  padding-bottom: 60px;
+}
+
+.contentWrapper {
+  max-width: 800px;
+  margin: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6; /* Borde gris claro */
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #111827; /* Texto oscuro */
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #6b7280; /* Gris oscuro */
+  font-size: 0.9rem;
+}
+
+.content {
+  max-width: 800px; /* Aseguramos el ancho del contenido */
+  margin: auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-size: 1rem; 
+  line-height: 1.7;
+  color: #4b5563; /* Texto principal gris oscuro */
+}
+
+.section {
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb; /* Borde separador muy sutil */
+}
+
+.content h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827; /* Título de sección oscuro */
+  margin-bottom: 1rem;
+}
+
+.content p {
+  margin-bottom: 0.5rem;
+}
+
+.content ul {
+  list-style-type: '✓  ';
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.content li {
+  padding-left: 0.5rem;
+}
+
+.content strong {
+  color: #111827; /* Strong oscuro */
+  font-weight: 600;
+}
+

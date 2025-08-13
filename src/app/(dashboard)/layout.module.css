@@ -1,0 +1,26 @@
+/* app/(dashboard)/layout.module.css */
+
+.dashboardContainer {
+  display: flex;
+  background-color: var(--background-primary);
+  min-height: 100vh;
+}
+
+.contentArea {
+  flex-grow: 1;
+  /* CORRECCIÓN: Usamos 'margin-left' para empujar el contenido */
+  /* Este valor coincide con el ancho de la barra lateral expandida */
+  margin-left: 260px; 
+  
+  /* El padding ahora es solo para el espaciado interno y uniforme */
+  padding: 2.5rem;
+  
+  /* Transición suave para el cambio de margen */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* --- Estilos para cuando la barra lateral está colapsada --- */
+.collapsed .contentArea {
+  /* Reducimos el margen izquierdo para que coincida con el ancho de la barra colapsada */
+  margin-left: 82px; 
+}

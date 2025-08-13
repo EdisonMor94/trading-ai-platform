@@ -1,0 +1,118 @@
+/* --- Contenedores de Fondo --- */
+.darkBgWrapper { background-color: #111827; }
+.lightBgWrapper { background-color: #f8f9fa; }
+
+.curvedBottom {
+  border-bottom-left-radius: 3rem;
+  border-bottom-right-radius: 3rem;
+}
+.fullyCurved {
+  border-radius: 3rem;
+  margin: 4rem 1rem;
+}
+@media (max-width: 768px) {
+  .fullyCurved {
+    border-radius: 2rem;
+    margin: 2rem 1rem;
+  }
+}
+
+/* --- Héroe --- */
+.heroContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; 
+  padding-top: 80px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 2rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(17, 24, 39, 0.6) 0%, #111827 70%),
+    url('/hero-background.png');
+  background-size: cover;
+  background-position: center;
+}
+.heroContent { max-width: 900px; position: relative; z-index: 2; }
+.heroTitle { font-size: 3.5rem; font-weight: 800; color: white; line-height: 1.2; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+@media (max-width: 768px) { .heroTitle { font-size: 2.75rem; } }
+.heroTitle span { background: linear-gradient(to right, #a78bfa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.heroSubtitle { margin-top: 1.5rem; font-size: 1.125rem; color: #d1d5db; line-height: 1.7; max-width: 700px; margin-left: auto; margin-right: auto; }
+.ctaButton { margin-top: 2.5rem; background: linear-gradient(to right, #a78bfa, #8b5cf6); color: white; font-weight: 600; font-size: 1rem; padding: 0.85rem 2.5rem; border-radius: 9999px; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.75rem; }
+.ctaButton:hover { transform: translateY(-4px); box-shadow: 0 15px 25px rgba(139, 92, 246, 0.3); }
+
+/* --- Estructura General --- */
+.contentWrapper { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 1rem; }
+.section { padding: 6rem 0; text-align: center; }
+.sectionTitle { font-size: 2.5rem; font-weight: 700; color: white; margin-bottom: 1rem; }
+.sectionSubtitle { color: #9ca3af; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+.lightText { color: #111827; }
+.sectionSubtitle.lightText { color: #4b5563; }
+
+/* --- Componentes en Sección Oscura (3 Pasos) --- */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 4rem; text-align: left; }
+.card { background: linear-gradient(145deg, #2a3447, #1f2937); padding: 2rem; border-radius: 0.75rem; border: 1px solid #374151; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.card:hover { transform: translateY(-10px); box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2); }
+.cardIcon { background: linear-gradient(to right, #a78bfa, #8b5cf6); width: 3.5rem; height: 3.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; box-shadow: 0 8px 15px rgba(139, 92, 246, 0.2); }
+.cardTitle { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.75rem; }
+.cardText { color: #9ca3af; line-height: 1.6; }
+
+/* --- Estilos para Tarjetas de Características --- */
+.featuresGrid { margin-top: 4rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; text-align: left; }
+.iconFeatureCard { background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 2.5rem 2rem; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.iconFeatureCard:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+.iconFeatureIconWrapper { background: linear-gradient(to right, #a78bfa, #8b5cf6); color: white; width: 3.5rem; height: 3.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 8px 15px rgba(139, 92, 246, 0.2); }
+.iconFeatureTitle { font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 0.75rem; }
+.iconFeatureDescription { color: #4b5563; line-height: 1.6; }
+
+/* --- INICIO DE NUEVOS ESTILOS PARA LA SECCIÓN DE SEÑALES --- */
+.signalsShowcaseSection {
+    background-color: #111827; /* Fondo oscuro para destacar */
+}
+.mockSignalsContainer {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+.mockSignalCard {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    border-left-width: 5px;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+    transform: scale(0.95);
+}
+.mockSignalCard.buySignal { border-left-color: #22c55e; }
+.mockSignalCard.sellSignal { border-left-color: #ef4444; }
+.mockSignalHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.mockSignalHeader h3 { font-size: 1.5rem; font-weight: 600; color: white; margin: 0; }
+.buyChip, .sellChip { font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; color: white; }
+.buyChip { background-color: #22c55e; }
+.sellChip { background-color: #ef4444; }
+.mockSignalJustification { color: #9ca3af; line-height: 1.6; font-style: italic; margin: 0 0 1.5rem 0; }
+.mockSignalLevels { display: flex; flex-direction: column; gap: 0.75rem; background-color: #111827; padding: 1rem; border-radius: 0.5rem; }
+.mockSignalLevels div { display: flex; justify-content: space-between; font-family: monospace; }
+.mockSignalLevels span:first-child { color: #9ca3af; }
+.mockSignalLevels span:last-child { font-weight: 600; color: white; }
+/* --- FIN DE NUEVOS ESTILOS --- */
+
+/* --- Estilos de Números y Testimonios --- */
+.statsGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 900px; margin: 4rem auto 0 auto; }
+.statItem { text-align: center; }
+.statNumber { font-size: 3rem; font-weight: 800; color: #a78bfa; line-height: 1; }
+.statLabel { margin-top: 0.75rem; color: #d1d5db; font-weight: 500; }
+
+.testimonialsGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 4rem; text-align: left; }
+.testimonialCard { background-color: #ffffff; padding: 2rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+.testimonialText { color: #4b5563; font-style: italic; line-height: 1.7; margin-bottom: 1.5rem; flex-grow: 1; }
+.testimonialAuthor { color: #111827; font-weight: 600; }
+.testimonialRole { font-weight: 400; color: #6b7280; }
+

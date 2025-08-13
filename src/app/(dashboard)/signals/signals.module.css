@@ -1,0 +1,139 @@
+/* signals/signals.module.css */
+
+.pageHeader {
+  margin-bottom: 2rem;
+}
+.pageTitle {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+.pageSubtitle {
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  font-size: 1.125rem;
+  max-width: 600px;
+}
+
+.signalsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.signalCard {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-left: 5px solid; /* Borde de color para la dirección */
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.signalCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+[data-theme="dark"] .signalCard:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+
+.buySignal { border-left-color: #22c55e; }
+.sellSignal { border-left-color: #ef4444; }
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.assetInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.assetName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.directionChip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  color: white;
+}
+.buyChip { background-color: #22c55e; }
+.sellChip { background-color: #ef4444; }
+
+.timeAgo {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.justification {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+.levelsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  background-color: var(--background-primary);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.levelItem .levelLabel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.levelItem .levelValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-family: monospace;
+  color: var(--text-primary);
+}
+
+.levelValue.stopLoss { color: #ef4444; }
+.levelValue.takeProfit { color: #22c55e; }
+
+.patternInfo {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--background-secondary);
+    border: 1px dashed var(--border-primary);
+    border-radius: 0.75rem;
+    color: var(--text-secondary);
+}
+.emptyState svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+.emptyState h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}

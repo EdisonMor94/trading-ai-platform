@@ -1,0 +1,148 @@
+/* src/app/(public)/layout.module.css */
+
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: rgba(17, 24, 39, 0.1); 
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  /* --- AÑADIDO: Altura fija --- */
+  height: 80px; 
+}
+
+.headerContainer {
+  max-width: 1200px;
+  height: 100%; /* Ocupa toda la altura del header */
+  margin: 0 auto;
+  padding: 0 1.5rem; /* Solo padding horizontal */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerScrolled {
+  background-color: rgba(17, 24, 39, 1); 
+  border-bottom: 1px solid #374151;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  display: flex;
+  align-items: center; 
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  color: #d1d5db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: white;
+}
+
+.navButton {
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.navButton:hover {
+  background-color: #6d28d9;
+}
+
+.mainContent {
+  flex: 1;
+}
+
+.footer {
+  background-color: #1f2937;
+  color: #9ca3af;
+  padding: 2rem;
+  border-top: 1px solid #374151;
+  margin-top: auto;
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+}
+
+.footerWarning {
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.footerWarning strong {
+  color: #f87171;
+  font-weight: 600;
+}
+
+.footerLinks {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footerLink {
+  color: #d1d5db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footerLink:hover {
+  color: white;
+}
+
+.footerCopyright {
+  font-size: 0.875rem;
+  border-top: 1px solid #374151;
+  padding-top: 1.5rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+

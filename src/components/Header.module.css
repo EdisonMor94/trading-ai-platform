@@ -1,0 +1,67 @@
+/* src/components/Header.module.css */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem; /* Padding interno para separar los elementos de los bordes */
+  background-color: rgba(17, 24, 39, 0.6); /* Fondo oscuro con 60% de opacidad */
+  border-bottom: 1px solid #374151;
+  backdrop-filter: blur(10px); /* Efecto de desenfoque para el fondo */
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%; /* Ocupa el 100% del ancho de su contenedor padre (el body) */
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  color: #d1d5db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: white;
+}
+
+.navButton {
+  background-color: #7c3aed; /* Morado */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  white-space: nowrap; /* Evita que el texto se parta */
+}
+
+.navButton:hover {
+  background-color: #6d28d9;
+}
+
+/* --- Estilos para Móviles --- */
+@media (max-width: 640px) {
+  .navLink {
+    display: none; /* Oculta "Iniciar Sesión" en móviles */
+  }
+  .header {
+    padding: 1rem;
+  }
+  .logo {
+    font-size: 1.25rem;
+  }
+}

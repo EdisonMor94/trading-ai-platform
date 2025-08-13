@@ -1,3 +1,73 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 1. Reseteo Básico (se mantiene) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* 2. Definición de Variables de Color */
+:root {
+  /* --- Paleta de Tema Claro (Por Defecto) --- */
+  --background-primary: #f8f9fa;      /* Gris muy claro para fondos de página */
+  --background-secondary: #ffffff;    /* Blanco para tarjetas y elementos elevados */
+  --background-sidebar: #ffffff;      /* Fondo de la barra lateral */
+  --text-primary: #111827;            /* Casi negro para texto principal */
+  --text-secondary: #6b7280;          /* Gris oscuro para texto secundario */
+  --border-primary: #e5e7eb;          /* Borde gris claro */
+  --accent-primary: #7c3aed;          /* Morado principal */
+  --accent-secondary: #10b981;        /* Verde principal */
+  --accent-primary-hover: #6d28d9;    /* Morado más oscuro para hover */
+}
+
+[data-theme="dark"] {
+  /* --- Paleta de Tema Oscuro --- */
+  --background-primary: #111827;      /* Gris oscuro principal */
+  --background-secondary: #1f2937;    /* Gris oscuro secundario */
+  --background-sidebar: #111827;      /* Fondo de la barra lateral */
+  --text-primary: #ffffff;            /* Blanco para texto principal */
+  --text-secondary: #9ca3af;          /* Gris claro para texto secundario */
+  --border-primary: #374151;          /* Borde gris oscuro */
+  --accent-primary: #a78bfa;          /* Morado claro */
+  --accent-secondary: #6ee7b7;        /* Verde claro */
+  --accent-primary-hover: #8b5cf6;    /* Morado más claro para hover */
+}
+
+/* 3. Detección automática del tema del sistema */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Si el sistema del usuario está en modo oscuro Y no ha elegido explícitamente el tema claro, aplicamos los colores oscuros por defecto */
+    --background-primary: #111827;
+    --background-secondary: #1f2937;
+    --background-sidebar: #111827;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --border-primary: #374151;
+    --accent-primary: #a78bfa;
+    --accent-secondary: #6ee7b7;
+    --accent-primary-hover: #8b5cf6;
+  }
+}
+
+/* 4. Estilos base que usan las variables */
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  /* Transición suave para el cambio de tema */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+

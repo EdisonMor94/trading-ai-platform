@@ -1,0 +1,120 @@
+/* dashboard/dashboard.module.css */
+
+/* --- Cabecera de Página --- */
+.pageHeader {
+  margin-bottom: 2rem;
+}
+.pageTitle {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+.pageSubtitle {
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  font-size: 1.125rem;
+}
+
+/* --- Estructura del Grid --- */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.mainColumn {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.sidebarColumn {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+@media (max-width: 1024px) {
+  .dashboardGrid { grid-template-columns: 1fr; }
+  .mainColumn, .sidebarColumn { grid-column: span 1; }
+}
+
+/* --- Estilos Generales para Widgets --- */
+.widgetCard {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+.widgetHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+.widgetHeader svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--accent-secondary);
+}
+.widgetHeader h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+.widgetText { color: var(--text-secondary); line-height: 1.6; margin: 0; }
+.widgetList { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
+.widgetList li { display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; }
+.widgetLink { margin-top: auto; padding-top: 1rem; color: var(--accent-primary); text-decoration: none; font-weight: 500; font-size: 0.875rem; }
+.widgetLink:hover { text-decoration: underline; }
+
+/* --- Estados de Carga (Esqueletos) --- */
+.skeletonText, .skeletonList {
+    background-color: var(--border-primary);
+    border-radius: 0.5rem;
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.skeletonText { width: 90%; height: 40px; }
+.skeletonList { width: 100%; height: 80px; }
+@keyframes pulse { 50% { opacity: .5; } }
+
+/* --- Estilos Específicos de Widgets --- */
+.eventTime { font-weight: 600; color: var(--text-primary); }
+.eventCurrency { font-weight: 600; color: var(--accent-primary); }
+.eventName { flex-grow: 1; color: var(--text-secondary); }
+.impactChip { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; color: white; }
+.impactChip.high { background-color: #ef4444; }
+.impactChip.medium { background-color: #f59e0b; }
+.impactChip.low { background-color: #8b5cf6; }
+
+.assetName { font-weight: 600; color: var(--text-primary); flex-grow: 1; }
+.assetPrice { font-family: monospace; }
+.assetChange { font-weight: 600; }
+.assetChange.positive { color: #22c55e; }
+.assetChange.negative { color: #ef4444; }
+.editButton { background: none; border: none; cursor: pointer; color: var(--text-secondary); margin-left: auto; padding: 0.25rem; }
+.editButton:hover { color: var(--text-primary); }
+
+/* --- Tarjeta CTA --- */
+.ctaCard { background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary)); color: white; border-radius: 0.75rem; padding: 2rem; display: flex; align-items: center; gap: 1.5rem; }
+.ctaIcon { background-color: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 999px; }
+.ctaIcon svg { width: 2rem; height: 2rem; }
+.ctaContent h3 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+.ctaContent p { margin: 0; opacity: 0.9; }
+.ctaButton { margin-left: auto; background-color: white; color: var(--accent-primary); padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; white-space: nowrap; transition: transform 0.2s ease; }
+.ctaButton:hover { transform: scale(1.05); }
+
+/* --- Modal para Editar Watchlist --- */
+.modalOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modalContent { background-color: var(--background-secondary); padding: 2rem; border-radius: 0.75rem; width: 90%; max-width: 500px; border: 1px solid var(--border-primary); }
+.modalContent h3 { margin-top: 0; font-size: 1.5rem; }
+.modalContent p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+.modalInputs { display: flex; flex-direction: column; gap: 1rem; }
+.modalInputs input { width: 100%; background-color: var(--background-primary); border: 1px solid var(--border-primary); color: var(--text-primary); font-size: 1rem; border-radius: 0.5rem; padding: 0.75rem; }
+.modalActions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+.modalButtonSecondary { background-color: var(--background-primary); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 0.6rem 1.2rem; border-radius: 0.5rem; cursor: pointer; }
+.modalButtonPrimary { background-color: var(--accent-primary); color: white; padding: 0.6rem 1.2rem; border-radius: 0.5rem; cursor: pointer; border: none; }
+.modalButtonPrimary:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -1,0 +1,199 @@
+/* src/app/(public)/pricing/pricing.module.css */
+.container {
+  background-color: #f8f9fa;
+  width: 100%;
+  padding-top: 120px;
+  padding-bottom: 60px;
+}
+
+.header {
+  max-width: 1400px;
+  margin: 0 auto 3rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.headerTitle {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.headerSubtitle {
+  color: #4b5563;
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.billingToggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d1d5db; transition: .4s; border-radius: 28px; }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+.switch input:checked + .slider { background-color: #7c3aed; }
+.switch input:checked + .slider:before { transform: translateX(22px); }
+
+.annualLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.discountBadge {
+  background-color: #166534;
+  color: #dcfce7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+/* --- MODIFICADO PARA 3 PLANES --- */
+.pricingGrid {
+  max-width: 1100px; /* Reducido para un mejor ajuste de 3 tarjetas */
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (min-width: 992px) { /* Cambiado el breakpoint para 3 columnas */
+  .pricingGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.planCard {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.planCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+
+.popular { border-color: #7c3aed; border-width: 2px; }
+.value { border-color: #10b981; border-width: 2px; }
+
+.tag {
+  position: absolute;
+  top: 1.5rem;
+  right: -45px;
+  color: white;
+  padding: 0.5rem 4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.popularTag { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+.valueTag { background: linear-gradient(90deg, #10b981, #34d399); }
+
+.cardContent {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.planName { font-size: 1.25rem; font-weight: 600; color: #111827; }
+.planDescription { color: #6b7280; font-size: 0.875rem; line-height: 1.5; margin-top: 0.5rem; height: 60px; }
+.priceContainer { margin-top: 1rem; }
+.planPrice { font-size: 2.75rem; font-weight: 800; color: #111827; }
+.planPrice span { font-size: 1rem; font-weight: 500; color: #6b7280; margin-left: 0.25rem; }
+.yearlyPriceTotal { font-size: 0.875rem; color: #6b7280; margin-top: -0.5rem; height: 20px; }
+.featureList { list-style: none; padding: 0; margin-top: 1.5rem; margin-bottom: 2rem; flex-grow: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.featureItem { display: flex; align-items: center; gap: 0.75rem; color: #4b5563; font-size: 0.9rem; }
+.featureIcon { width: 16px; height: 16px; color: #10b981; flex-shrink: 0; }
+
+.paypalButtonContainer {
+    margin-top: auto; /* Asegura que el botón se alinee al fondo */
+}
+
+.errorMessage {
+    color: #ef4444;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.loginPrompt {
+    text-align: center;
+    margin-top: auto;
+    padding: 0.75rem;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+}
+
+.loginPrompt a {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+}
+.loginPrompt a:hover {
+    text-decoration: underline;
+}
+
+
+.faqSection {
+  margin-top: 6rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.faqTitle { font-size: 2rem; font-weight: 700; color: #111827; text-align: center; margin-bottom: 2.5rem; }
+.faqList { display: flex; flex-direction: column; gap: 1rem; }
+.faqItem { background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; }
+.faqQuestion { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; background: none; border: none; color: #111827; font-size: 1.125rem; font-weight: 600; cursor: pointer; text-align: left; }
+.faqIcon { font-size: 1.75rem; font-weight: 300; color: #9ca3af; transition: transform 0.3s ease; }
+.faqIconOpen { transform: rotate(45deg); color: #7c3aed; }
+.faqAnswer { padding: 0 1.25rem 1.25rem 1.25rem; color: #4b5563; line-height: 1.7; }
+
+.securityNote {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.securityNote svg {
+  flex-shrink: 0;
+}
+
+
+
