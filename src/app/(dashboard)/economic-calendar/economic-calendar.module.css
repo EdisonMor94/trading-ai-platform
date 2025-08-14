@@ -13,6 +13,40 @@
   color: var(--text-secondary);
   margin-top: 0.25rem;
 }
+
+.dateFilterContainer {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  width: fit-content;
+}
+
+.dateFilterButton {
+  background-color: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.dateFilterButton:hover {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.dateFilterButton.active {
+  background-color: var(--accent-primary);
+  color: white;
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -113,6 +147,7 @@
 }
 .eventCell {
   color: var(--text-primary);
+  font-weight: 500;
 }
 .dataCell {
   font-family: monospace;
@@ -134,7 +169,18 @@
     border-radius: 0.75rem;
 }
 
-/* --- ESTILOS DE IMPACTO DEFINITIVOS --- */
+/* --- NUEVA CLASE PARA LA DESCRIPCIÓN --- */
+.eventDescription {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0 0; /* Añade un pequeño margen superior y quita el inferior */
+  padding: 0;
+  line-height: 1.6;
+  max-width: 70ch; /* Limita el ancho para mejorar la legibilidad */
+}
+
+
 .high, .medium, .low {
     font-size: 0.75rem;
     font-weight: 700;
@@ -160,14 +206,12 @@
     background-color: #10b981;
 }
 
-
-/* --- ESTILOS PARA EL DESGLOSE --- */
 .detailsRow td {
     padding: 0;
     border-top: 1px solid var(--border-primary);
 }
 .detailsCell {
-    padding: 3rem 0; 
+    padding: 1.5rem 0; 
     background-color: rgba(0,0,0,0.02);
 }
 [data-theme="dark"] .detailsCell {
@@ -205,7 +249,7 @@
     width: 32px;
     height: 32px;
     animation: spin 1s linear infinite;
-    margin: 1rem auto;
+    margin: 2rem auto;
 }
 @keyframes spin {
     to { transform: rotate(360deg); }
@@ -218,23 +262,6 @@
     background-color: rgba(239, 68, 68, 0.1);
     border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: 0.5rem;
-}
-
-.upgradeNotice {
-    text-align: center;
-}
-.upgradeNotice p {
-    margin: 0 0 1rem 0;
-    color: var(--text-secondary);
-}
-.upgradeNotice button {
-    background-color: #10b981;
-    color: white;
-    font-weight: 600;
-    padding: 0.6rem 1.5rem;
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
 }
 
 .aiAnalysisContainer {
@@ -262,7 +289,7 @@
     gap: 1.5rem;
 }
 .scenarioCard {
-    background-color: var(--background-secondary);
+    background-color: var(--background-primary);
     border: 1px solid var(--border-primary);
     border-radius: 0.75rem;
     padding: 1.5rem;
@@ -279,6 +306,10 @@
     line-height: 1.6;
     margin: 0;
 }
+
+
+
+
 
 
 

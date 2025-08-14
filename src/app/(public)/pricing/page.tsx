@@ -11,10 +11,10 @@ const plans = [
   { 
     name: 'Básico', 
     description: 'Perfecto para traders que están empezando y quieren validar sus primeras estrategias.',
-    monthly: { id: 'P-2B427913SR8387537NCNBUGY', price: 15 },
-    yearly: { id: 'P-67W36541XN5756533NCNBBYEA', price: 153 },
+    monthly: { id: 'P-2B427913SR8387537NCNBUGY', price: 14.99 },
+    yearly: { id: 'P-67W36541XN5756533NCNBBYEA', price: 152.89 },
     features: [
-        '20 análisis/mes', 
+        '30 análisis/mes', 
         'Análisis de IA Estándar', 
         'Pulso del Mercado en Tiempo Real', 
         'Calendario Económico'
@@ -23,10 +23,10 @@ const plans = [
   { 
     name: 'Avanzado', 
     description: 'La solución ideal para traders consistentes que necesitan herramientas avanzadas y mayor volumen.',
-    monthly: { id: 'P-3JA15531TF858463ANCNBWTA', price: 50 },
-    yearly: { id: 'P-9LY634811M5534711NCNBZII', price: 510 },
+    monthly: { id: 'P-3JA15531TF858463ANCNBWTA', price: 33.99 },
+    yearly: { id: 'P-9LY634811M5534711NCNBZII', price: 346.70 },
     features: [
-        '150 análisis/mes', 
+        '90 análisis/mes', 
         'Todo lo de Básico, más:', 
         '"El Porqué" del Movimiento con IA', 
         'Explorador de Activos (Screener)'
@@ -36,10 +36,10 @@ const plans = [
   { 
     name: 'Profesional', 
     description: 'La ventaja definitiva con análisis predictivo y soporte prioritario para traders de alto rendimiento.',
-    monthly: { id: 'P-52E72801UA850030SNCNBXJI', price: 100 },
-    yearly: { id: 'P-9HN47635GH447432NNCNBZUI', price: 1020 },
+    monthly: { id: 'P-52E72801UA850030SNCNBXJI', price: 64.99 },
+    yearly: { id: 'P-9HN47635GH447432NNCNBZUI', price: 662.90 },
     features: [
-        '500 análisis/mes', 
+        '250 análisis/mes', 
         'Todo lo de Avanzado, más:', 
         'Análisis de Eventos con IA',
         'Señales de Trading con IA', // <-- INICIO DE LA MODIFICACIÓN

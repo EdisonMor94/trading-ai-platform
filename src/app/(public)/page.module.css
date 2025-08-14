@@ -31,7 +31,7 @@
   text-align: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 50%, rgba(17, 24, 39, 0.6) 0%, #111827 70%),
+    radial-gradient(circle at 10% 10%, rgba(17, 24, 39, 0.6) 0%, #111827 70%),
     url('/hero-background.png');
   background-size: cover;
   background-position: center;

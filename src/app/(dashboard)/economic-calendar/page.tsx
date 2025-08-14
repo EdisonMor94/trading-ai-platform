@@ -17,6 +17,7 @@ interface EconomicEvent {
   actual: number | string | null;
   estimate: number | string | null;
   previous: number | string | null;
+  event_description?: string; // <-- 1. AÑADIDO: Se añade la nueva propiedad
 }
 interface AIAnalysis {
   professional_description: string;
@@ -33,6 +34,10 @@ const regions = {
   north_america: { name: 'Norteamérica', countries: ['US', 'CA', 'MX'] },
   asia_pacific: { name: 'Asia-Pacífico', countries: ['JP', 'CN', 'AU', 'NZ'] },
 };
+
+// --- Tipos para el nuevo filtro de fecha ---
+type DateFilter = 'today' | 'tomorrow' | 'thisWeek';
+
 
 // --- Componentes Internos ---
 const CountdownTimer = ({ eventDate }: { eventDate: string }) => {
@@ -76,7 +81,14 @@ const EventRow = ({ event, onToggle, isExpanded }: { event: EconomicEvent, onTog
         {isToday && isFuture && <CountdownTimer eventDate={event.date} />}
       </td>
       <td className={styles.currencyCell}>{event.currency}</td>
-      <td className={styles.eventCell}>{event.event}</td>
+      {/* --- 2. INICIO DE LA MODIFICACIÓN --- */}
+      <td className={styles.eventCell}>
+        <div>{event.event}</div>
+        {event.event_description && (
+            <p className={styles.eventDescription}>{event.event_description}</p>
+        )}
+      </td>
+      {/* --- FIN DE LA MODIFICACIÓN --- */}
       <td>
         <span className={styles[event.impact.toLowerCase()]}>{event.impact}</span>
       </td>
@@ -100,7 +112,7 @@ const AIAnalysisDisplay = ({ analysis }: { analysis: AIAnalysis }) => (
         <div>
             <h4 className={styles.aiTitle}>Escenarios de Trading</h4>
             <div className={styles.scenariosGrid}>
-                {analysis.forecast_scenarios.map(item => (
+                {Array.isArray(analysis.forecast_scenarios) && analysis.forecast_scenarios.map(item => (
                     <div key={item.scenario} className={styles.scenarioCard}>
                         <h5 className={styles.scenarioTitle}>{item.scenario}</h5>
                         <p className={styles.scenarioText}>{item.recommendation}</p>
@@ -125,12 +137,34 @@ const EventAnalysisContainer = ({ event, supabase, canUseEventAnalysis }: { even
         setIsLoading(true);
         setError(null);
         try {
-            const { data, error: funcError } = await supabase.functions.invoke('get-event-analysis', { body: { eventName: event.event, currency: event.currency, date: event.date, estimate: event.estimate, previous: event.previous } });
-            if (funcError) throw funcError;
-            if (data.error) throw new Error(data.error);
-            setAnalysis(data);
+            const { data, error: invokeError } = await supabase.functions.invoke('get-event-analysis', { 
+                body: { 
+                    eventName: event.event, 
+                    currency: event.currency, 
+                    date: event.date, 
+                    estimate: event.estimate, 
+                    previous: event.previous 
+                } 
+            });
+            
+            if (invokeError) {
+                throw invokeError;
+            }
+
+            const isValidAnalysis = data && 
+                                    typeof data.professional_description === 'string' && 
+                                    data.professional_description.trim() !== '' &&
+                                    Array.isArray(data.forecast_scenarios);
+
+            if (isValidAnalysis) {
+                setAnalysis(data);
+            } else {
+                throw new Error("Respuesta de la IA inválida.");
+            }
+
         } catch (err: any) {
-            setError(err.message || 'Ocurrió un error al generar el análisis.');
+            console.error('Error detallado al generar análisis (solo visible para desarrolladores):', err);
+            setError('No se pudo generar el análisis en este momento. Por favor, inténtelo de nuevo más tarde.');
         } finally {
             setIsLoading(false);
         }
@@ -157,6 +191,7 @@ const EventAnalysisContainer = ({ event, supabase, canUseEventAnalysis }: { even
     );
 };
 
+
 // --- Componente Principal de la Página ---
 export default function EconomicCalendarPage() {
   const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -165,6 +200,8 @@ export default function EconomicCalendarPage() {
   const [events, setEvents] = useState<EconomicEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const [dateFilter, setDateFilter] = useState<DateFilter>('today');
   
   const [impactFilter, setImpactFilter] = useState<string>('all');
   const [currencyFilter, setCurrencyFilter] = useState<string>('');
@@ -177,6 +214,7 @@ export default function EconomicCalendarPage() {
     if (userLoading) return;
 
     setLoading(true);
+    setExpandedEventId(null);
 
     const fetchInitialData = async () => {
       try {
@@ -186,11 +224,17 @@ export default function EconomicCalendarPage() {
           setRegionFilter(profile.calendar_preferences.region || 'all');
         }
 
-        const { data: calendarData, error: calendarError } = await supabase.functions.invoke('get-economic-calendar');
+        const { data: calendarData, error: calendarError } = await supabase.functions.invoke('get-economic-calendar', {
+          body: { dateRange: dateFilter }
+        });
+
         if (calendarError) throw calendarError;
         
-        const sortedEvents = calendarData.sort((a: EconomicEvent, b: EconomicEvent) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        setEvents(sortedEvents);
+        // --- MANEJO DE ERRORES / DEBUGGING ---
+        // Imprime en la consola del navegador los datos recibidos para verificar si 'event_description' está llegando.
+        console.log("Datos recibidos del calendario:", calendarData);
+
+        setEvents(calendarData || []);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -199,7 +243,7 @@ export default function EconomicCalendarPage() {
     };
 
     fetchInitialData();
-  }, [userLoading, profile?.id]);
+  }, [userLoading, profile?.id, dateFilter]);
 
   useEffect(() => {
     if (isInitialMount.current || loading) {
@@ -219,11 +263,10 @@ export default function EconomicCalendarPage() {
   }, [impactFilter, currencyFilter, regionFilter, supabase, loading]);
 
   const filteredAndGroupedEvents = useMemo(() => {
-    const selectedRegionCountries = regions[regionFilter as keyof typeof regions].countries;
     const filtered = events.filter(event => {
       const impactMatch = impactFilter === 'all' || event.impact.toLowerCase() === impactFilter.toLowerCase();
       const currencyMatch = currencyFilter === '' || event.currency.toLowerCase().includes(currencyFilter.toLowerCase());
-      const regionMatch = regionFilter === 'all' || selectedRegionCountries.includes(event.country);
+      const regionMatch = regionFilter === 'all' || regions[regionFilter as keyof typeof regions].countries.includes(event.country);
       return impactMatch && currencyMatch && regionMatch;
     });
     return filtered.reduce((acc, event) => {
@@ -238,7 +281,7 @@ export default function EconomicCalendarPage() {
     setExpandedEventId(prevId => (prevId === eventId ? null : eventId));
   };
 
-  if (userLoading || loading) {
+  if (userLoading) {
     return <p>Cargando calendario...</p>;
   }
   
@@ -250,13 +293,33 @@ export default function EconomicCalendarPage() {
         <h1 className={styles.headerTitle}>Calendario Económico</h1>
         <p className={styles.headerSubtitle}>Anticípate a la volatilidad con los eventos más importantes de la semana.</p>
       </header>
+      
+      <div className={styles.dateFilterContainer}>
+        <button 
+          onClick={() => setDateFilter('today')} 
+          className={`${styles.dateFilterButton} ${dateFilter === 'today' ? styles.active : ''}`}>
+          Hoy
+        </button>
+        <button 
+          onClick={() => setDateFilter('tomorrow')} 
+          className={`${styles.dateFilterButton} ${dateFilter === 'tomorrow' ? styles.active : ''}`}>
+          Mañana
+        </button>
+        <button 
+          onClick={() => setDateFilter('thisWeek')} 
+          className={`${styles.dateFilterButton} ${dateFilter === 'thisWeek' ? styles.active : ''}`}>
+          Esta Semana
+        </button>
+      </div>
+
       <div className={styles.filters}>
         <div className={styles.filterGroup}><label htmlFor="region-filter">Filtrar por Región</label><select id="region-filter" value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)}>{Object.entries(regions).map(([key, value]) => (<option key={key} value={key}>{value.name}</option>))}</select></div>
         <div className={styles.filterGroup}><label htmlFor="currency-filter">Filtrar por Divisa</label><input id="currency-filter" type="text" placeholder="Ej: USD, EUR..." value={currencyFilter} onChange={(e) => setCurrencyFilter(e.target.value)} /></div>
         <div className={styles.filterGroup}><label htmlFor="impact-filter">Filtrar por Impacto</label><select id="impact-filter" value={impactFilter} onChange={(e) => setImpactFilter(e.target.value)}><option value="all">Todos</option><option value="High">Alto</option><option value="Medium">Medio</option><option value="Low">Bajo</option></select></div>
       </div>
+      
       <div className={styles.calendar}>
-        {Object.keys(filteredAndGroupedEvents).length > 0 ? (
+        {loading ? <div className={styles.spinner}></div> : Object.keys(filteredAndGroupedEvents).length > 0 ? (
             Object.entries(filteredAndGroupedEvents).map(([date, eventsInDay]) => (
               <div key={date} className={styles.dayGroup}>
                 <h2 className={styles.dateHeader}>{date.charAt(0).toUpperCase() + date.slice(1)}</h2>
@@ -282,11 +345,6 @@ export default function EconomicCalendarPage() {
     </div>
   );
 }
-
-
-
-
-
 
 
 

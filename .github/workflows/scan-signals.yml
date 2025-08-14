@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Este paso obtiene la fecha actual para usarla en las condiciones 'if'
+      - name: Get current minute
+        id: date
+        run: echo "minute=$(date +'%M')" >> $GITHUB_OUTPUT
+
       # --- Tarea 1: Se ejecuta siempre (cada 5 minutos) ---
       - name: Actualizar valores 'actual' del calendario
         run: |
@@ -37,6 +42,15 @@ jobs:
         run: |
           echo "Ejecutando tarea horaria: update-calendar..."
           curl -X POST "${{ secrets.UPDATE_CALENDAR_URL }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json"
+            
+      # --- Tarea 4 (NUEVA): Se ejecuta solo al inicio de la hora ---
+      - name: Enriquecer Eventos con Descripciones (Solo si es :00)
+        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5
+        run: |
+          echo "Ejecutando tarea horaria: enrich-events..."
+          curl -X POST "${{ secrets.ENRICH_EVENTS_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
 

@@ -7,57 +7,79 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // 1. Verificar autenticación del usuario (como antes)
+    const { dateRange } = await req.json();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let fromDate: Date;
+    let toDate: Date;
+
+    switch (dateRange) {
+      case 'tomorrow':
+        fromDate = new Date(today);
+        fromDate.setDate(today.getDate() + 1);
+        toDate = new Date(fromDate);
+        toDate.setHours(23, 59, 59, 999);
+        break;
+      case 'thisWeek':
+        const dayOfWeek = today.getDay();
+        const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        fromDate = new Date(today.setDate(diff));
+        toDate = new Date(fromDate);
+        toDate.setDate(fromDate.getDate() + 6);
+        toDate.setHours(23, 59, 59, 999);
+        break;
+      case 'today':
+      default:
+        fromDate = today;
+        toDate = new Date(today);
+        toDate.setHours(23, 59, 59, 999);
+        break;
+    }
+    
+    const fromISO = fromDate.toISOString();
+    const toISO = toDate.toISOString();
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) throw new Error('Usuario no autenticado');
 
-    // 2. Preparar las fechas para la consulta a nuestra base de datos
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Empezar desde el inicio del día de hoy
-    const nextWeek = new Date(today);
-    nextWeek.setDate(today.getDate() + 7);
-
-    // 3. Leer los eventos directamente desde la tabla 'economic_events'
-    console.log(`[get-calendar] Obteniendo eventos desde la base de datos.`);
-    const { data: events, error } = await supabaseClient
+    // --- INICIO DE LA CORRECCIÓN ---
+    // Se corrige el nombre de la columna 'event' por 'event_translated'.
+    // Usamos un alias "event: event_translated" para que la respuesta JSON
+    // siga teniendo la propiedad 'event' que el frontend espera.
+    const { data, error } = await supabaseClient
       .from('economic_events')
-      .select('*')
-      .gte('date', today.toISOString()) // Mayor o igual que hoy
-      .lte('date', nextWeek.toISOString()) // Menor o igual que la próxima semana
-      .order('date', { ascending: true }); // Ordenar por fecha
+      .select('date, country, currency, event: event_translated, impact, actual, estimate, previous, event_description')
+      .gte('date', fromISO)
+      .lte('date', toISO)
+      .order('date', { ascending: true });
+    // --- FIN DE LA CORRECCIÓN ---
 
-    if (error) throw error;
-    
-    // 4. Renombrar 'event_translated' a 'event' para que coincida con lo que el frontend espera
-    const formattedEvents = events.map(event => {
-        // Hacemos una copia para no modificar el objeto original directamente
-        const newEvent = { ...event };
-        // Renombramos la propiedad
-        newEvent.event = newEvent.event_translated;
-        // Eliminamos las propiedades que el frontend no necesita
-        delete newEvent.event_translated;
-        delete newEvent.event_original;
-        return newEvent;
-    });
+    if (error) {
+      console.error('[get-calendar] Error en la consulta a Supabase:', error);
+      throw new Error(`Error al obtener los eventos: ${error.message}`);
+    }
 
-    // 5. Devolver los datos al frontend
-    return new Response(JSON.stringify(formattedEvents), {
+    console.log(`[get-calendar] Se encontraron ${data.length} eventos.`);
+
+    return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     });
 
   } catch (error) {
-    console.error("[get-economic-calendar] Error:", error);
+    console.error("[get-calendar] Error general en la función:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
+      status: 500,
     });
   }
 });
+
+
+
 
 
