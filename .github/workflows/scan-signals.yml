@@ -25,32 +25,31 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
 
-      # --- Tarea 2: Se ejecuta solo al inicio de la hora ---
-      # Este paso comprueba si el minuto actual está entre 00 y 04.
-      # Esto nos da un margen de 5 minutos por si GitHub Actions se retrasa.
-      - name: Escanear Señales de Trading (Solo si es :00)
-        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5
+      # --- Tarea 2: Se ejecuta al inicio de la hora O manualmente ---
+      - name: Escanear Señales de Trading
+        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5 || github.event_name == 'workflow_dispatch'
         run: |
-          echo "Ejecutando tarea horaria: signal-scanner..."
+          echo "Ejecutando tarea horaria o manual: signal-scanner..."
           curl -X POST "${{ secrets.SIGNAL_SCANNER_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
 
-      # --- Tarea 3: Se ejecuta solo al inicio de la hora ---
-      - name: Actualizar Calendario Económico Completo (Solo si es :00)
-        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5
+      # --- Tarea 3: Se ejecuta al inicio de la hora O manualmente ---
+      - name: Actualizar Calendario Económico Completo
+        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5 || github.event_name == 'workflow_dispatch'
         run: |
-          echo "Ejecutando tarea horaria: update-calendar..."
+          echo "Ejecutando tarea horaria o manual: update-calendar..."
           curl -X POST "${{ secrets.UPDATE_CALENDAR_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
             
-      # --- Tarea 4 (NUEVA): Se ejecuta solo al inicio de la hora ---
-      - name: Enriquecer Eventos con Descripciones (Solo si es :00)
-        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5
+      # --- Tarea 4: Se ejecuta al inicio de la hora O manualmente ---
+      - name: Enriquecer Eventos con Descripciones
+        if: fromJson(format('[{0}]', steps.date.outputs.minute))[0] < 5 || github.event_name == 'workflow_dispatch'
         run: |
-          echo "Ejecutando tarea horaria: enrich-events..."
+          echo "Ejecutando tarea horaria o manual: enrich-events..."
           curl -X POST "${{ secrets.ENRICH_EVENTS_URL }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json"
+
 
